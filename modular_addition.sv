@@ -4,16 +4,12 @@ module modular_addition(a, b, m, c);
     input [DATA_WIDTH-1:0] a;
     input [DATA_WIDTH-1:0] b;
     input [DATA_WIDTH-1:0] m;
-    output [DATA_WIDTH-1:0] c;
+    output logic [DATA_WIDTH-1:0] c;
 
-    wire [DATA_WIDTH-1:0] sum;
-
-    assign sum = a + b;
-    assign c =
-
-    always @(*) begin
+    always_comb begin
         c = a + b;
-        if (c > m)
+        if (c > m) begin
             c = c - m;
+        end
     end
 endmodule
