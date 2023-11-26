@@ -1,4 +1,4 @@
-module modular_addition(a, b, m, c);
+module modular_addition(clk, a, b, m, c);
     parameter DATA_WIDTH = 8;
 
     input [DATA_WIDTH-1:0] a;
@@ -6,10 +6,16 @@ module modular_addition(a, b, m, c);
     input [DATA_WIDTH-1:0] m;
     output logic [DATA_WIDTH-1:0] c;
 
+    logic [DATA_WIDTH-1:0] out;
+
     always_comb begin
-        c = a + b;
-        if (c > m) begin
-            c = c - m;
+        out = a + b;
+        if (out > m) begin
+            out = c - m;
         end
+    end
+
+    always_ff @(posedge clk) begin
+        c <= out;
     end
 endmodule
