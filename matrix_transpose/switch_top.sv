@@ -11,6 +11,7 @@ module switch_top (clk, rst, ctrl, input_elements, output_elements);
 	input logic [CHUNK_WIDTH-1:0] input_elements [0:NUM_PE-1][0:NUM_PE-1];
 	output logic [CHUNK_WIDTH-1:0] output_elements [0:NUM_PE-1][0:NUM_PE-1];
 
+	// [row][col][idx]
 	logic [CHUNK_WIDTH-1:0] outputs [0:NUM_MG-1][0:NUM_PE-1][0:NUM_PE-1];
 
 	genvar i, j, k;

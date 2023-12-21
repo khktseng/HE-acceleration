@@ -1,5 +1,3 @@
-`include "./switch_top.sv"
-
 module matrix_transpose_single(clk, rst, ctrl, input_elements, output_elements);
 	parameter DATA_WIDTH = 64;
 	parameter NUM_PE = 8;
@@ -27,3 +25,4 @@ module matrix_transpose_single(clk, rst, ctrl, input_elements, output_elements);
 			end
 		end
 	endgenerate
+endmodule
