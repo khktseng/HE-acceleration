@@ -43,7 +43,13 @@ module switch_top (clk, rst, ctrl, input_elements, output_elements);
 		for (j = 0; j < NUM_PE; j = j + 1) begin
 			for (k = 0; k < NUM_PE; k = k + 1) begin
 				always_ff @(posedge clk) begin
-					output_elements[j][k] <= outputs[NUM_MG-1][j][k];
+					if (ctrl) begin // transpose
+						output_elements[j][k] <= outputs[NUM_MG-1][j][k];
+					end else if (rst) begin
+						output_elements[j][k] <= 0;
+					end else begin
+						output_elements[j][k] <= input_elements[j][k];
+					end
 				end
 			end
 		end
