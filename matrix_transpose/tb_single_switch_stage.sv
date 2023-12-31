@@ -40,6 +40,8 @@ module tb_single_switch_stage;
 
 		#50;
 
+		$display("{%2h, %2h, %2h, %2h}", out_elements[0], out_elements[1], out_elements[2], out_elements[3]);
+
 		$finish;
 	end
 endmodule
