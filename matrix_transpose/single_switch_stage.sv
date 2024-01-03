@@ -1,7 +1,8 @@
 module single_switch_stage(clk, rst, ctrl, in_elements_down, in_elements_across, out_elements);
     parameter DATA_WIDTH = 64;
-    parameter NUM_PE = 8;
-    parameter NUM_MG = NUM_PE;
+    parameter NUM_MG = 8;
+    parameter NUM_PE = NUM_MG;
+    
     parameter SI = 0;
     parameter SJ = 0;
 

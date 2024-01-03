@@ -2,8 +2,9 @@
 
 module switch_top (clk, rst, ctrl, input_elements, output_elements, in_val, out_val);
 	parameter DATA_WIDTH = 64;
-	parameter NUM_PE = 8;
 	parameter NUM_MG = 8;
+	parameter NUM_PE = NUM_MG;
+	
 
 	localparam CHUNK_WIDTH = NUM_MG / NUM_PE * DATA_WIDTH;
 
@@ -38,11 +39,12 @@ module switch_top (clk, rst, ctrl, input_elements, output_elements, in_val, out_
 					ss
 					(
 						.clk(clk),
+						.out_elements(out_elements),
 						.rst(rst),
 						.ctrl(ctrl),
                         .in_elements_down(in_e_down),
-                        .in_elements_across(in_e_across),
-                        .out_elements(out_elements)
+                        .in_elements_across(in_e_across)
+                        
                      );
 
 				for (k = 0; k < NUM_PE; k = k + 1) begin
