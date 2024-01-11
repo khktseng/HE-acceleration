@@ -56,6 +56,7 @@ module tb_matrix_transpose;
 		end
 		$display();
 
+/*
 		$display("row 0 inputs down");
 		for (i = 0; i < 4; i = i + 1) begin
             $write("%h, ", DUT.g_in_i[0].g_in_j[0].ss.in_elements_down[i]);
@@ -174,7 +175,7 @@ module tb_matrix_transpose;
 		for (i = 0; i < 4; i = i + 1) begin
             $write("%h, ", DUT.g_in_i[1].g_in_j[3].ss.out_elements[i]);
 		end $display();
-		$display();
+		$display(); */
 	
 
 		$display("###################################");
