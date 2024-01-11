@@ -27,7 +27,6 @@ module single_switch_stage(clk, rst, ctrl, in_elements_down, in_elements_across,
     logic [CHUNK_WIDTH-1:0] next_output [0:NUM_PE-1];
     logic [CHUNK_WIDTH-1:0] shift_elements_i [0:SHIFT_ELEMENTS-1];
     logic [CHUNK_WIDTH-1:0] shift_elements [0:SHIFT_ELEMENTS-1];
-    logic [CHUNK_WIDTH-1:0] temp;
 
     genvar i;
     // Keep items

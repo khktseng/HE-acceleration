@@ -20,7 +20,7 @@ module tb_address_calc();
         .ctrl(ctrl),
         .base_addr(base_addr),
         .chunk_addr(chunk_addr),
-        .store_addr(store_addr),
+        .store_addr(store_addr)
     );
 
     always #5 clk <= ~clk;
@@ -41,14 +41,12 @@ module tb_address_calc();
         $dumpvars;
 
         rst = 1;
-        val = 0;
         ctrl = 1;
         base_addr = 0;
 
         #15;
 
         rst = 0;
-        val = 1;
         
         do_test(0);
         do_test(8);
@@ -66,6 +64,7 @@ module tb_address_calc();
         do_test(200);
         do_test(208);
         do_test(216);
+        
         $finish;
     end
 endmodule
