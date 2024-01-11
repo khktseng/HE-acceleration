@@ -1,4 +1,4 @@
-module matrix_transpose_single(clk, rst, ctrl, input_elements, output_elements, in_val, out_val);
+module matrix_transpose_single(clk, rst, ctrl, input_elements, output_elements);
 	parameter DATA_WIDTH = 64;
 	parameter NUM_MG = 8;
 	parameter NUM_PE = NUM_MG;

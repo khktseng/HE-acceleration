@@ -20,25 +20,28 @@ module address_calc
     localparam COL_INC = DATA_WIDTH / BYTE;
     localparam CHUNK_IDX_WIDTH = $clog2(ARR_SIZE / CHUNK_SIZE);
     localparam CHUNK_BYTES = DATA_WIDTH / BYTE * CHUNK_SIZE;
-    localparam CHUNK_I_MOD_1 = $clog2(ARR_SIZE);
-
-    localparam CHUNK_BYTES_L = $clog2(CHUNK_BYTES);
-    localparam ARR_SIZE_L = $clog2(ARR_SIZE);
-
     //localparam CHUNK_ROW_INC = 
 
     logic [CHUNK_IDX_WIDTH-1:0] chunk_i;
     logic [CHUNK_IDX_WIDTH-1:0] chunk_j;
-    logic [CHUNK_IDX_WIDTH-1:0] chunk_i_mask;
     logic [ADDR_WIDTH-1:0] diff_addr;
     logic [ADDR_WIDTH-1:0] n_store_addr;
 
     // suggested to choose DATA_WIDTH, CHUNK_SIZE so that division can just be a shift
     assign diff_addr = chunk_addr - base_addr;
-    assign chunk_i_mask = 0 + {CHUNK_I_MOD_1{1'b1}};
-    assign chunk_i = (diff_addr >> CHUNK_BYTES_L) & chunk_i_mask;
-    assign chunk_j = (diff_addr >> CHUNK_BYTES_L) >> ARR_SIZE_L;
-    assign n_store_addr = (chunk_i << CHUNK_BYTES_L << ARR_SIZE_L) + (chunk_j << CHUNK_BYTES_L) + base_addr;
+    assign chunk_i = ((chunk_addr - base_addr) / CHUNK_BYTES) % ARR_SIZE;
+    assign chunk_j = (chunk_addr - base_addr) / CHUNK_BYTES / ARR_SIZE;
+    assign n_store_addr = chunk_i * (CHUNK_BYTES * ARR_SIZE) + chunk_j * CHUNK_BYTES;
+
+/*
+    //logic [ADDR_WIDTH-1:0] n_store_addr, n_test;
+    always_comb begin
+        //chunk_i = ((chunk_addr - base_addr) / (DATA_WIDTH / BYTE * CHUNK_SIZE)) % ARR_SIZE;
+        //chunk_j = (chunk_addr - base_addr) / (DATA_WIDTH / BYTE * ARR_SIZE * CHUNK_SIZE);
+        //n_test = chunk_i * CHUNK_BYTES * ARR_SIZE  + chunk_j * CHUNK_BYTES;
+        diff_addr = chunk_addr - base_addr;
+        n_store_addr = (diff_addr / CHUNK_BYTES) % ARR_SIZE) * (CHUNK_BYTES * ARR_SIZE) + (chunk_addr - );
+    end*/
 
     always @(posedge clk) begin
         if (rst) begin
