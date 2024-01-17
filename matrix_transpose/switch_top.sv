@@ -15,20 +15,12 @@ module switch_top (clk, rst, ctrl, input_elements, output_elements, in_val, out_
 	input logic in_val;
 	output logic out_val;
 
-	// [row][col][idx]
-	logic [CHUNK_WIDTH-1:0] outputs [0:NUM_MG-1][0:NUM_PE-1][0:NUM_PE-1];
 	logic [0:NUM_MG-1] valid_regs ;
 
 	assign out_val = valid_regs[NUM_MG-1];
 
 	genvar i, j, k;
 	generate
-		for(j = 0; j < NUM_PE; j = j + 1) begin : g_in0
-			for (k = 0; k < NUM_PE; k = k + 1) begin
-				assign outputs[0][j][k] = input_elements[j][k];
-			end
-		end
-
 		for (i = 0; i < NUM_MG - 1; i = i + 1) begin : g_in_i
 			for (j = 0; j < NUM_PE; j = j + 1) begin : g_in_j
 				logic [CHUNK_WIDTH-1:0] in_e_down [0:NUM_PE-1];
@@ -46,14 +38,10 @@ module switch_top (clk, rst, ctrl, input_elements, output_elements, in_val, out_
                         .in_elements_across(in_e_across)
                         
                      );
-
-				for (k = 0; k < NUM_PE; k = k + 1) begin
-					assign in_e_down[k] = outputs[i][j][k];
-					assign in_e_across[k] = outputs[i][(j+1)%NUM_PE][k];
-					assign outputs[i+1][j][k] = out_elements[k];
-				end
 			end
 		end
+
+		for (i = 0; i < NUM_MG)
 	endgenerate
 
 	generate
