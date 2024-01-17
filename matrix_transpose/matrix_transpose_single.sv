@@ -18,10 +18,12 @@ module matrix_transpose_single(clk, rst, ctrl, input_elements, output_elements, 
 				always_ff @(posedge clk) begin
 					if (ctrl) begin //transpose
 						output_elements[i][j] <= input_elements[j][i];
-					end else if (rst) begin
-						output_elements[i][j] <= 0;
 					end else begin
 						output_elements[i][j] <= input_elements[i][j];
+					end
+
+					if (rst) begin
+						output_elements[i][j] <= 0;
 					end
 				end
 			end
