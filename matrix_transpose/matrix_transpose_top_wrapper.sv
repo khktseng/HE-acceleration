@@ -7,11 +7,11 @@ module matrix_transpose_top_wrapper
 #(
     parameter TRANSPOSE_TYPE = 1,
     parameter DATA_WIDTH = 64,
-    parameter NUM_MG = 64,
+    parameter NUM_MG = 32,
     parameter NUM_PE = NUM_MG,
-    parameter ARR_SIZE = 64,
+    parameter ARR_SIZE = 32,
     parameter ADDR_WIDTH = 64,
-    parameter CHUNK_SIZE = 64
+    parameter CHUNK_SIZE = 32
 )(
     input logic clk,
     input logic rst,
