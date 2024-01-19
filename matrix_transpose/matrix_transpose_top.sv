@@ -13,7 +13,7 @@ module matrix_transpose_top
     parameter NUM_PE = NUM_MG,
     parameter ARR_SIZE = 8,     // larger array width /height in number of data elements
     parameter ADDR_WIDTH = 64,
-    parameter CHUNK_SIZE = 4    // chunk width / height in number of data elements
+    parameter CHUNK_SIZE = 8    // chunk width / height in number of data elements
 )(
     input logic clk,
     input logic rst,
@@ -28,6 +28,38 @@ module matrix_transpose_top
     output logic [ADDR_WIDTH-1:0] store_addr
 );
 
+    logic [DATA_WIDTH-1:0] input_buffer [0:NUM_MG-1][0:NUM_PE-1];
+    logic ctrl_buf;
+    logic in_val_buf;
+    logic base_addr_buf;
+    logic chunk_addr_buf;
+
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            ctrl_buf <= 0;
+            in_val_buf <= 0;
+            base_addr_buf <= 0;
+            chunk_addr_buf <= 0;
+        end else begin
+            ctrl_buf <= ctrl;
+            in_val_buf <= in_val;
+            base_addr_buf <= base_addr;
+            chunk_addr_buf <= chunk_addr;
+        end
+    end
+
+    genvar i, j;
+    generate
+        for (i = 0; i < NUM_MG; i = i + 1) begin
+            for (j = 0; j < NUM_PE; j = j + 1) begin
+                always_ff @(posedge clk) begin
+                    input_buffer[i][j] <= input_elements[i][j];
+                end
+            end
+        end
+    endgenerate
+
+
     logic [ADDR_WIDTH-1:0] addr_gen_out;
     address_calc #(
         .DATA_WIDTH(DATA_WIDTH),
@@ -37,13 +69,13 @@ module matrix_transpose_top
     ) addr_gen (
         .clk        (clk),
         .rst        (rst),
-        .ctrl       (ctrl),
-        .base_addr  (base_addr),
-        .chunk_addr (chunk_addr),
+        .ctrl       (ctrl_buf),
+        .base_addr  (base_addr_buf),
+        .chunk_addr (chunk_addr_buf),
         .store_addr (addr_gen_out)
     );
 
-    genvar i;
+    
     generate
         case(TRANSPOSE_TYPE)
             0: begin    // switching network
@@ -55,10 +87,10 @@ module matrix_transpose_top
                 ) mt (
                     .clk    (clk),
                     .rst    (rst),
-                    .ctrl   (ctrl),
-                    .input_elements (input_elements),
+                    .ctrl   (ctrl_buf),
+                    .input_elements (input_buffer),
                     .output_elements(output_elements),
-                    .in_val (in_val),
+                    .in_val (in_val_buf),
                     .out_val(out_val)
                 );
 
@@ -82,10 +114,10 @@ module matrix_transpose_top
                 ) mt (
                     .clk    (clk),
                     .rst    (rst),
-                    .ctrl   (ctrl),
-                    .input_elements (input_elements),
+                    .ctrl   (ctrl_buf),
+                    .input_elements (input_buffer),
                     .output_elements(output_elements),
-                    .in_val (in_val),
+                    .in_val (in_val_buf),
                     .out_val(out_val)
                 );
 

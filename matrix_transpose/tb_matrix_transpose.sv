@@ -178,6 +178,7 @@ module tb_matrix_transpose;
 		$display(); */
 	
 
+/*
 		$display("###################################");
 		$display();
 		for(k = 0; k < 4; k = k + 1) begin
@@ -189,7 +190,7 @@ module tb_matrix_transpose;
 				$display();
 			end
 			$display();
-		end
+		end */
 
 		$display("out_val = %0d", out_val);
 		$finish;
