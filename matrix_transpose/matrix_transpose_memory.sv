@@ -19,7 +19,7 @@ module matrix_tranpose_memory
 );
     localparam ADDR_WIDTH = $clog2(NUM_PE);
 
-    logic write_e;
+    logic wen;
     logic [ADDR_WIDTH-1:0] write_addr;
     logic [ADDR_WIDTH-1:0] read_addr[0:NUM_MG-1];
 
@@ -29,16 +29,17 @@ module matrix_tranpose_memory
     genvar i;
     generate
         for (i = 0; i < NUM_MG; i = i + 1) begin : memory_banks
-            tranpose_memory_bank #(DATA_WIDTH, NUM_PE)
-                bank
-                (
-                    .clk(clk),
-                    .write_e(write_e),
-                    .write_addr(write_addr),
-                    .read_addr(read_addr[i]),
-                    .write_data(write_data[i]),
-                    .read_data(read_data[i])
-                );
+            tranpose_memory_bank #(
+                .DATA_WIDTH(DATA_WIDTH),
+                .NUM_PE(NUM_PE)
+            ) bank (
+                .clk(clk),
+                .write_e(write_e),
+                .write_addr(write_addr),
+                .read_addr(read_addr[i]),
+                .write_data(write_data[i]),
+                .read_data(read_data[i])
+            );
         end
     endgenerate
 

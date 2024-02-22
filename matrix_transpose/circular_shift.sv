@@ -2,28 +2,30 @@
 `define CIRCULAR_SHIFT_SV
 
 // shifts right by shift_amt
-module CIRCULAR_SHIFT_SV
-#(
-    parameter DATA_WIDTH = 64,
-    parameter NUM_PE = 8,
+module circular_shift #(
+    parameter TOTAL_WIDTH = 512,
 
-    localparam SHIFT_AMT_BITS = $clog2(NUM_PE)
-)
-(
-    input logic [DATA_WIDTH-1:0] input_row [0:NUM_PE-1],
-    input logic [SHIFT_AMT_BITS-1:0] shift_amt,
-    output logic [DATA_WIDTH-1:0] output_row [0:NUM_PE-1]
+    parameter SHIFT_AMT_BITS = $clog2(TOTAL_WIDTH),
+    parameter SHIFT_DIR = 0 // 0 = shift right. 1 = shift left
+)(
+    input [TOTAL_WIDTH-1:0] input_bits,
+    input [SHIFT_AMT_BITS-1:0] shift_amt,
+    output logic [TOTAL_WIDTH-1:0] output_bits
 );
-    integer i;
-    always_comb begin
-        for (i = 0; i < NUM_PE; i = i + 1) begin
-            if (i + shift_amt >= NUM_PE)
-                output_row [i + shift_amt - NUM_PE] = input_row[i];
-            else
-                output_row[i + shift_amt] = input_row[i];
-        end
-    end
+    logic [TOTAL_WIDTH-1:0] shifted;
+    logic [TOTAL_WIDTH-1:0] shifted_complement;
 
+    generate
+        if (SHIFT_DIR) begin // shift 
+            assign shifted = input_bits << shift_amt;
+            assign shifted_complement = input_bits >> (TOTAL_WIDTH - shift_amt);
+        end else  begin
+            assign shifted = input_bits >> shift_amt;
+            assign shifted_complement = input_bits << (TOTAL_WIDTH - shift_amt);
+        end
+    endgenerate
+
+    assign output_bits = shifted + shifted_complement;
 endmodule
 
 `endif
