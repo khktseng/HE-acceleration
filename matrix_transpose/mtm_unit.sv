@@ -3,22 +3,24 @@
 
 `include "transpose_memory_bank.sv"
 `include "memory_ctrl.sv"
-`include "c"
+`include "circular_shift.sv"
 
 module mtm_unit #(
 	parameter DATA_WIDTH = 64,
 	parameter NUM_PE = 8,
 	
-	parameter ADDR_WIDTH = $clog2(NUM_PE),
+	parameter ADDR_WIDTH = $clog2(NUM_PE) + 1,
 
-	localparam TOTAL_WIDTH = DATA_WIDTH * NUM_PE;
+	localparam TOTAL_WIDTH = DATA_WIDTH * NUM_PE,
 	localparam SHIFT_AMT_BITS = $clog2(TOTAL_WIDTH)
 )(
 	input logic clk,
 	input logic rst,
 
+	input logic val,
 	input logic [DATA_WIDTH-1:0] input_row [0:NUM_PE-1],
 
+	output logic out_val,
 	output logic [DATA_WIDTH-1:0] output_row [0:NUM_PE-1]
 );
 	logic wen;
@@ -37,20 +39,24 @@ module mtm_unit #(
     logic [SHIFT_AMT_BITS-1:0] out_shift_amt;
     logic [TOTAL_WIDTH-1:0] out_shift_output;
 
-	assign in_shift_input = input_row;
-	assign write_data = in_shift_output;
-
-	assign out_shift_input = read_data;
-	assign output_row = out_shift_output;
+	genvar i;
+	generate
+		for (i = 0; i < NUM_PE; i = i + 1) begin
+			assign in_shift_input[(i+1)*DATA_WIDTH-1:i*DATA_WIDTH] = input_row[i];
+			assign write_data[i] = in_shift_output[(i+1)*DATA_WIDTH-1:i*DATA_WIDTH];
+			assign out_shift_input[(i+1)*DATA_WIDTH-1:i*DATA_WIDTH] = read_data[i];
+			assign output_row[i] = out_shift_output[(i+1)*DATA_WIDTH-1:i*DATA_WIDTH];
+		end
+	endgenerate
 
 	circular_shift #(
 		.TOTAL_WIDTH (TOTAL_WIDTH),
 		.SHIFT_AMT_BITS (SHIFT_AMT_BITS),
 		.SHIFT_DIR (1)
 	) circular_shift_inst_in (
-		.input_row (in_shift_input),
+		.input_bits (in_shift_input),
 		.shift_amt (in_shift_amt),
-		.output_row (in_shift_output)
+		.output_bits (in_shift_output)
 	);
 
 	circular_shift #(
@@ -58,9 +64,9 @@ module mtm_unit #(
 		.SHIFT_AMT_BITS (SHIFT_AMT_BITS),
 		.SHIFT_DIR (0)
 	) circular_shift_inst_out (
-		.input_row (out_shift_input),
+		.input_bits (out_shift_input),
 		.shift_amt (out_shift_amt),
-		.output_row (out_shift_output)
+		.output_bits (out_shift_output)
 	);
 
 	transpose_memory_bank #(
@@ -79,9 +85,21 @@ module mtm_unit #(
 	);
 
 	memory_ctrl #(
-
+		.DATA_WIDTH (DATA_WIDTH),
+		.NUM_PE (NUM_PE),
+		.ADDR_WIDTH (ADDR_WIDTH),
+		.SHIFT_AMT_BITS (SHIFT_AMT_BITS)
 	) memory_ctrl_inst (
-
+		.clk (clk),
+		.rst (rst),
+		.val (val),
+		.wen (wen),
+		.write_addr (write_addr),
+		.out_val (out_val),
+		.ren (ren),
+		.read_addr (read_addr),
+		.in_shift_amt (in_shift_amt),
+		.out_shift_amt (out_shift_amt)
 	);
 	
 
