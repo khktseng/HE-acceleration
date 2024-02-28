@@ -41,6 +41,7 @@ module tb_mtm_unit();
 		for (i = 0; i < 4; i = i + 1) begin
 			for (j = 0; j < 4; j = j + 1) begin
 				input_matrix0[i][j] = 8'h10 * i + 8'h0A + j;
+				input_matrix1[i][j] = 8'h0;
 			end
 		end
 	end
@@ -49,6 +50,26 @@ module tb_mtm_unit();
 		rst = 1;
 		val = 0;
 		input_row = input_matrix0[0];
+		
+		#10;
+
+		rst = 0;
+		val = 1;
+
+		#10;
+
+		input_row = input_matrix0[1]; #10;
+		input_row = input_matrix0[2]; #10;
+		input_row = input_matrix0[3]; #10;
+
+		val = 0;
+		input_row = input_matrix1[0]; #10;
+
+		#10;
+		#100;
+
+
+		$finish;
 	end
 
 endmodule
