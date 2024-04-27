@@ -2,8 +2,9 @@
 `define MATRIX_TRANSPOSE_MEMROY_SV
 
 `include "./transpose_memory_bank.sv"
+`include "mtm_unit.sv"
 
-module matrix_tranpose_memory
+module matrix_transpose_memory
 #(
     parameter DATA_WIDTH = 64,
     parameter NUM_MG = 8,
@@ -31,14 +32,14 @@ module matrix_tranpose_memory
         for (i = 0; i < NUM_MG; i = i + 1) begin : memory_banks
 		mtm_unit #(
 			.DATA_WIDTH(DATA_WIDTH),
-			.NUM_PE(NUM_PE),
-		)(
+			.NUM_PE(NUM_PE)
+        ) mtm_unit_inst (
 			.clk(clk),
 			.rst(rst),
 			.val(in_val),
 			.input_row(input_elements[i]),
 			.out_val(out_val),
-			.output_row(output_elements[i]),
+			.output_row(output_elements[i])
             );
         end
     endgenerate

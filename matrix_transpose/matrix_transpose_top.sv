@@ -4,6 +4,7 @@
 `include "address_calc.sv"
 `include "matrix_transpose_single.sv"
 `include "switch_top.sv"
+`include "matrix_transpose_memory.sv"
 
 module matrix_transpose_top
 #(
@@ -105,6 +106,22 @@ module matrix_transpose_top
                 end
 
                 assign store_addr = addr_gen_pipe [NUM_MG-2];
+            end
+
+            1: begin
+                matrix_transpose_memory #(
+                    .DATA_WIDTH(DATA_WIDTH),
+                    .NUM_MG(NUM_MG)
+                ) mt (
+                    .clk (clk),
+                    .rst (rst),
+                    .ctrl (ctrl),
+                    .in_val (in_val_buf),
+                    .out_val (out_val),
+                    .input_elements (input_buffer),
+                    .output_elements (output_elements)
+                );
+
             end
             default: begin      // Single stage CB
                 matrix_transpose_single #(

@@ -1,5 +1,5 @@
 `define DATA_WIDTH 16
-`define ADDR_WIDTH 2
+`define ADDR_WIDTH 3
 `define NUM_PE 4
 
 `include "transpose_memory_bank.sv"

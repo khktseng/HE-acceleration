@@ -1,9 +1,13 @@
+`ifndef TB_MTM_UNIT_SV
+`define TB_MTM_UNIT_SV
+
 `timescale 1ns/1ns
 
 `include "mtm_unit.sv"
 
 `define DATA_WIDTH 8
 `define NUM_PE 4
+`define TOTAL_WIDTH 32
 
 module tb_mtm_unit();
 	logic clk;
@@ -32,6 +36,20 @@ module tb_mtm_unit();
 
 	always #5 clk = ~clk;
 	initial clk = 1;
+	integer clk_cnt;
+	always @(posedge clk) clk_cnt <= clk_cnt + 1;
+
+	logic [`TOTAL_WIDTH-1:0] in_shift_input, in_shift_output, out_shift_input, out_shift_output;
+	logic [$clog2(`TOTAL_WIDTH)-1:0] in_shift_amt, out_shift_amt;
+
+	assign in_shift_input = DUT.in_shift_input;
+	assign in_shift_output = DUT.in_shift_output;
+	assign out_shift_input = DUT.out_shift_input;
+	assign out_shift_output = DUT.out_shift_output;
+
+	assign in_shift_amt = DUT.in_shift_amt;
+	//assign out_shift_
+
 
 	integer i, j;
 	initial begin
@@ -47,11 +65,12 @@ module tb_mtm_unit();
 	end
 
 	initial begin
+
 		rst = 1;
 		val = 0;
 		input_row = input_matrix0[0];
 		
-		#10;
+		#11;
 
 		rst = 0;
 		val = 1;
@@ -62,7 +81,7 @@ module tb_mtm_unit();
 		input_row = input_matrix0[2]; #10;
 		input_row = input_matrix0[3]; #10;
 
-		val = 0;
+		val = 1;
 		input_row = input_matrix1[0]; #10;
 
 		#10;
@@ -73,3 +92,5 @@ module tb_mtm_unit();
 	end
 
 endmodule
+
+`endif

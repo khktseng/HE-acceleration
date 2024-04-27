@@ -31,9 +31,9 @@ module matrix_transpose_top_wrapper
     logic [ADDR_WIDTH-1:0] store_addr;
 
     integer i;
-    always_comb begin
-        input_elements[temp_in_sel_i][temp_in_sel_j] = input_e;
-        output_e = output_elements[temp_out_sel_i][temp_out_sel_j];
+    always_ff @(posedge clk) begin
+        input_elements[temp_in_sel_i][temp_in_sel_j] <= input_e;
+        output_e <= output_elements[temp_out_sel_i][temp_out_sel_j];
     end
 
     matrix_transpose_top
