@@ -32,8 +32,8 @@ module matrix_transpose_top
     logic [DATA_WIDTH-1:0] input_buffer [0:NUM_MG-1][0:NUM_PE-1];
     logic ctrl_buf;
     logic in_val_buf;
-    logic base_addr_buf;
-    logic chunk_addr_buf;
+    logic [ADDR_WIDTH-1:0] base_addr_buf;
+    logic [ADDR_WIDTH-1:0] chunk_addr_buf;
 
     always_ff @(posedge clk) begin
         if (rst) begin

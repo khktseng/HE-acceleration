@@ -18,14 +18,6 @@ module matrix_transpose_memory
     input logic [DATA_WIDTH-1:0] input_elements [0:NUM_MG-1][0:NUM_PE-1],
     output logic [DATA_WIDTH-1:0] output_elements [0:NUM_MG-1][0:NUM_PE-1]
 );
-    localparam ADDR_WIDTH = $clog2(NUM_PE);
-
-    logic wen;
-    logic [ADDR_WIDTH-1:0] write_addr;
-    logic [ADDR_WIDTH-1:0] read_addr[0:NUM_MG-1];
-
-    logic [DATA_WIDTH-1:0] write_data [0:NUM_MG-1];
-    logic [DATA_WIDTH-1:0] read_data [0:NUM_MG-1];
 
     genvar i;
     generate

@@ -1,6 +1,8 @@
 `ifndef BUTTERFLY_STAGE_SV
 `define BUTTERFLY_STAGE_SV
 
+`include "switch_2_2.sv"
+
 module butterfly_stage
 #(
 	parameter DATA_WIDTH = 64,

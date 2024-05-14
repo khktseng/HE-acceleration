@@ -1,6 +1,8 @@
 `ifndef BUTTERFLY_NETWORK_SV
 `define BUTTERFLY_NETWORK_SV
 
+`include "butterfly_stage.sv"
+
 module butterfly_network #(
 	parameter DATA_WIDTH = 64,
 	parameter NUM_INPUTS = 16,
